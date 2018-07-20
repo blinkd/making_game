@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset='utf-8'>
+	<title>game 1</title>
+    <style media="screen">
+        canvas {
+            border: 1px black solid;
+        }
+
+    </style>
+</head>
+<body>
+	<canvas id = 'id-canvas' width='400' height='300'></canvas>
+
+	<script>
+
+	// 第一部分
+
+  var imageFromPath = function(path){
+		var img = new Image()
+		img.src = path
+		return	img
+	}
+
+ //为何不需要
+	// log(img)
+	// img.onload = function(){
+	// 	context.drawImage(img, x, y)
+	// }
+
+	var Paddle = function(){
+		var img = imageFromPath('paddle.png')
+		var o = {
+			image:img,
+			x:100,
+			y:250,
+			speed:7,
+		}
+		return o
+	}
+
+
+	var __main = function () {
+
+		var log = console.log.bind(console)
+		var convas = document.querySelector('#id-canvas')
+		var context = convas.getContext('2d')
+
+		var paddle = Paddle()
+
+		var leftDown = false
+		var rightDown = false
+
+		//events
+		window.addEventListener('keydown', function(event){
+			log('keydown')
+			var k = event.key
+			if (k == 'a'){
+				leftDown = true
+				// x -= 10
+		    // context.clearRect(0, 0, convas.width, convas.height)
+				// context.drawImage(img, x, y)
+			}else if(k == 'd'){
+				rightDown = true
+				// x += 10
+				// context.clearRect(0, 0, convas.width, convas.height)
+				// context.drawImage(img, x, y)
+			}
+
+		})
+
+		window.addEventListener('keyup', function(event){
+			log('keyup')
+			var k = event.key
+			if (k == 'a'){
+				leftDown = false
+			}else if(k == 'd'){
+				rightDown = false
+			}
+
+		})
+
+		setInterval(function(){
+			if (leftDown){
+				paddle.x -= paddle.speed
+			}else if(rightDown){
+				paddle.x += paddle.speed
+			}
+			log(paddle)
+			context.clearRect(0, 0, convas.width, convas.height)
+			context.drawImage(paddle.image, paddle.x, paddle.y)
+		}, 1000/30)
+
+	}
+
+	__main()
+
+	</script>
+</body>
+</html>
