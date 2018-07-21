@@ -29,25 +29,56 @@
 	// 	context.drawImage(img, x, y)
 	// }
 
+
+// paddle 的逻辑应该放在paddle对象里去操作 其实例
 	var Paddle = function(){
 		var img = imageFromPath('paddle.png')
 		var o = {
 			image:img,
 			x:100,
 			y:250,
-			speed:7,
+			speed:10,
+		}
+		o.moveLeft = function(){
+			o.x -= o.speed
+		}
+
+		o.moveRight = function(){
+			o.x += o.speed
 		}
 		return o
 	}
 
 
+	var Game = function(){
+		var g = {}
+
+		var canvas = document.querySelector('#id-canvas')
+		var context = canvas.getContext('2d')
+
+		g.canvas = canvas
+		g.context = context
+
+		setInterval (function(){
+			//updata
+			g.update()
+			//clear\
+			context.clearRect(0, 0, canvas.width, canvas.height)
+			//draw
+			g.draw()
+		}, 1000/30)
+
+		return g
+	}
+
 	var __main = function () {
 
 		var log = console.log.bind(console)
-		var convas = document.querySelector('#id-canvas')
-		var context = convas.getContext('2d')
+
 
 		var paddle = Paddle()
+		var game = Game()
+
 
 		var leftDown = false
 		var rightDown = false
@@ -58,14 +89,8 @@
 			var k = event.key
 			if (k == 'a'){
 				leftDown = true
-				// x -= 10
-		    // context.clearRect(0, 0, convas.width, convas.height)
-				// context.drawImage(img, x, y)
 			}else if(k == 'd'){
 				rightDown = true
-				// x += 10
-				// context.clearRect(0, 0, convas.width, convas.height)
-				// context.drawImage(img, x, y)
 			}
 
 		})
@@ -81,16 +106,25 @@
 
 		})
 
-		setInterval(function(){
+		game.update = function(){
 			if (leftDown){
-				paddle.x -= paddle.speed
+				// paddle.x -= paddle.speed
+				paddle.moveLeft()
 			}else if(rightDown){
-				paddle.x += paddle.speed
+				paddle.moveRight()
+				// paddle.x += paddle.speed
 			}
-			log(paddle)
-			context.clearRect(0, 0, convas.width, convas.height)
-			context.drawImage(paddle.image, paddle.x, paddle.y)
-		}, 1000/30)
+		}
+
+		game.draw = function(){
+				game.context.drawImage(paddle.image, paddle.x, paddle.y)
+		}
+
+		// setInterval(function(){
+		//
+		// 	log(paddle)
+		//
+		// }, 1000/30)
 
 	}
 
